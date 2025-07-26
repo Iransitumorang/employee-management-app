@@ -23,6 +23,10 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "outputPath": "dist/employee-management-app",
+            "allowedCommonJsDependencies": [
+              "sweetalert2"
+            ],
             "assets": [
               {
                 "glob": "**/*",
@@ -43,8 +47,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "10kB",
+                  "maximumError": "15kB"
                 }
               ],
               "outputHashing": "all"

@@ -1,0 +1,83 @@
+<div class="employee-detail-container">
+  <div class="header">
+    <h1>Employee Detail</h1>
+    <p>Detailed information about the employee</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading employee details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error">
+    <p>{{ error }}</p>
+    <button class="ok-btn" (click)="onOk()">Back to List</button>
+  </div>
+
+  <!-- Employee Detail -->
+  <div *ngIf="employee && !isLoading" class="employee-detail">
+    <div class="detail-card">
+      <div class="detail-header">
+        <h2>{{ employee.firstName }} {{ employee.lastName }}</h2>
+        <span class="status-badge" [class]="getStatusClass(employee.status)">
+          {{ employee.status }}
+        </span>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-item">
+          <label>Employee ID</label>
+          <span>{{ employee.id }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Username</label>
+          <span>{{ employee.username }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Full Name</label>
+          <span>{{ employee.firstName }} {{ employee.lastName }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Email</label>
+          <span>{{ employee.email }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Birth Date</label>
+          <span>{{ formatDate(employee.birthDate) }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Basic Salary</label>
+          <span class="salary">{{ formatCurrency(employee.basicSalary) }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Status</label>
+          <span class="status-badge" [class]="getStatusClass(employee.status)">
+            {{ employee.status }}
+          </span>
+        </div>
+
+        <div class="detail-item">
+          <label>Group</label>
+          <span>{{ employee.group }}</span>
+        </div>
+
+        <div class="detail-item full-width">
+          <label>Description</label>
+          <span>{{ formatDateTime(employee.description) }}</span>
+        </div>
+      </div>
+
+      <div class="detail-actions">
+        <button class="ok-btn" (click)="onOk()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

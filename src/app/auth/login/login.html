@@ -1,0 +1,55 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h2>Employee Management System</h2>
+      <p>Silakan login untuk melanjutkan</p>
+    </div>
+    
+    <form (ngSubmit)="onLogin()" class="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username"
+          name="username"
+          [(ngModel)]="username"
+          placeholder="Masukkan username"
+          required
+          [disabled]="isLoading"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Masukkan password"
+          required
+          [disabled]="isLoading"
+        >
+      </div>
+      
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+      
+      <button 
+        type="submit" 
+        class="login-btn"
+        [disabled]="!username || !password || isLoading"
+      >
+        <span *ngIf="!isLoading">Login</span>
+        <span *ngIf="isLoading">Loading...</span>
+      </button>
+    </form>
+    
+    <div class="login-info">
+      <p><strong>Demo Credentials:</strong></p>
+      <p>Username: admin</p>
+      <p>Password: admin123</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,174 @@
+<div class="add-employee-container">
+  <div class="header">
+    <h1>Add New Employee</h1>
+    <p>Fill in the form below to add a new employee</p>
+  </div>
+
+  <form (ngSubmit)="onSave()" class="employee-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="username">Username *</label>
+        <input 
+          type="text" 
+          id="username"
+          name="username"
+          [(ngModel)]="employee.username"
+          placeholder="Enter username"
+          [class.error]="errors['username']"
+        >
+        <div class="error-message" *ngIf="errors['username']">
+          {{ errors['username'] }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="firstName">First Name *</label>
+        <input 
+          type="text" 
+          id="firstName"
+          name="firstName"
+          [(ngModel)]="employee.firstName"
+          placeholder="Enter first name"
+          [class.error]="errors['firstName']"
+        >
+        <div class="error-message" *ngIf="errors['firstName']">
+          {{ errors['firstName'] }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="lastName">Last Name *</label>
+        <input 
+          type="text" 
+          id="lastName"
+          name="lastName"
+          [(ngModel)]="employee.lastName"
+          placeholder="Enter last name"
+          [class.error]="errors['lastName']"
+        >
+        <div class="error-message" *ngIf="errors['lastName']">
+          {{ errors['lastName'] }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input 
+          type="email" 
+          id="email"
+          name="email"
+          [(ngModel)]="employee.email"
+          placeholder="Enter email address"
+          [class.error]="errors['email']"
+        >
+        <div class="error-message" *ngIf="errors['email']">
+          {{ errors['email'] }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="birthDate">Birth Date *</label>
+        <input 
+          type="date" 
+          id="birthDate"
+          name="birthDate"
+          [(ngModel)]="employee.birthDate"
+          [max]="maxDate"
+          [class.error]="errors['birthDate']"
+        >
+        <div class="error-message" *ngIf="errors['birthDate']">
+          {{ errors['birthDate'] }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="basicSalary">Basic Salary *</label>
+        <input 
+          type="number" 
+          id="basicSalary"
+          name="basicSalary"
+          [(ngModel)]="employee.basicSalary"
+          placeholder="Enter basic salary"
+          min="0"
+          step="100000"
+          [class.error]="errors['basicSalary']"
+        >
+        <div class="error-message" *ngIf="errors['basicSalary']">
+          {{ errors['basicSalary'] }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="status">Status *</label>
+        <select 
+          id="status"
+          name="status"
+          [(ngModel)]="employee.status"
+          [class.error]="errors['status']"
+        >
+          <option value="">Select status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+          <option value="Pending">Pending</option>
+        </select>
+        <div class="error-message" *ngIf="errors['status']">
+          {{ errors['status'] }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="group">Group *</label>
+        <div class="group-dropdown">
+          <input 
+            type="text" 
+            id="group"
+            name="group"
+            [(ngModel)]="groupSearchText"
+            (input)="onGroupSearch()"
+            (focus)="onGroupInputFocus()"
+            (blur)="onGroupInputBlur()"
+            placeholder="Search and select group"
+            [class.error]="errors['group']"
+          >
+          <div class="dropdown-list" *ngIf="showGroupDropdown && filteredGroups.length > 0">
+            <div 
+              *ngFor="let group of filteredGroups" 
+              class="dropdown-item"
+              (click)="onGroupSelect(group)"
+            >
+              {{ group }}
+            </div>
+          </div>
+        </div>
+        <div class="error-message" *ngIf="errors['group']">
+          {{ errors['group'] }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button 
+        type="button" 
+        class="cancel-btn" 
+        (click)="onCancel()"
+        [disabled]="isLoading"
+      >
+        Cancel
+      </button>
+      <button 
+        type="submit" 
+        class="save-btn"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">Save Employee</span>
+        <span *ngIf="isLoading">Saving...</span>
+      </button>
+    </div>
+  </form>
+</div>

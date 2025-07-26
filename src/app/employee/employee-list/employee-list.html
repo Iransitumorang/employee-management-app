@@ -1,0 +1,210 @@
+<div class="employee-list-container">
+  <div class="header">
+    <h1>Employee List</h1>
+    <button class="add-btn" (click)="onAddEmployee()">
+      <span>+</span> Add Employee
+    </button>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-section">
+    <div class="search-row">
+      <div class="search-field">
+        <label>First Name</label>
+        <input 
+          type="text" 
+          [(ngModel)]="searchParams.firstName" 
+          placeholder="Search by first name"
+          (keyup.enter)="onSearch()"
+        >
+      </div>
+      <div class="search-field">
+        <label>Last Name</label>
+        <input 
+          type="text" 
+          [(ngModel)]="searchParams.lastName" 
+          placeholder="Search by last name"
+          (keyup.enter)="onSearch()"
+        >
+      </div>
+      <div class="search-field">
+        <label>Email</label>
+        <input 
+          type="email" 
+          [(ngModel)]="searchParams.email" 
+          placeholder="Search by email"
+          (keyup.enter)="onSearch()"
+        >
+      </div>
+      <div class="search-field">
+        <label>Group</label>
+        <input 
+          type="text" 
+          [(ngModel)]="searchParams.group" 
+          placeholder="Search by group"
+          (keyup.enter)="onSearch()"
+        >
+      </div>
+      <div class="search-field">
+        <label>Status</label>
+        <select [(ngModel)]="searchParams.status" (change)="onSearch()">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+          <option value="Pending">Pending</option>
+        </select>
+      </div>
+      <div class="search-actions">
+        <button class="search-btn" (click)="onSearch()">Search</button>
+        <button class="clear-btn" (click)="searchParams = {}; onSearch()">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Size Control -->
+  <div class="page-controls">
+    <div class="page-size-control">
+      <label>Items per page:</label>
+      <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+      </select>
+    </div>
+    <div class="total-info">
+      Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, totalItems) }} of {{ totalItems }} entries
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div 
+    class="notification" 
+    *ngIf="showNotification"
+    [class]="'notification-' + notificationType"
+  >
+    {{ notificationMessage }}
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <table class="employee-table">
+      <thead>
+        <tr>
+          <th (click)="onSort('id')" class="sortable">
+            ID
+            <span *ngIf="sortBy === 'id'" class="sort-icon">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="onSort('firstName')" class="sortable">
+            First Name
+            <span *ngIf="sortBy === 'firstName'" class="sort-icon">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="onSort('lastName')" class="sortable">
+            Last Name
+            <span *ngIf="sortBy === 'lastName'" class="sort-icon">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="onSort('email')" class="sortable">
+            Email
+            <span *ngIf="sortBy === 'email'" class="sort-icon">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="onSort('birthDate')" class="sortable">
+            Birth Date
+            <span *ngIf="sortBy === 'birthDate'" class="sort-icon">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="onSort('basicSalary')" class="sortable">
+            Basic Salary
+            <span *ngIf="sortBy === 'basicSalary'" class="sort-icon">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="onSort('status')" class="sortable">
+            Status
+            <span *ngIf="sortBy === 'status'" class="sort-icon">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th (click)="onSort('group')" class="sortable">
+            Group
+            <span *ngIf="sortBy === 'group'" class="sort-icon">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            </span>
+          </th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let employee of employees" class="employee-row">
+          <td>{{ employee.id }}</td>
+          <td>{{ employee.firstName }}</td>
+          <td>{{ employee.lastName }}</td>
+          <td>{{ employee.email }}</td>
+          <td>{{ formatDate(employee.birthDate) }}</td>
+          <td>{{ formatCurrency(employee.basicSalary) }}</td>
+          <td>
+            <span class="status-badge" [class]="'status-' + employee.status.toLowerCase()">
+              {{ employee.status }}
+            </span>
+          </td>
+          <td>{{ employee.group }}</td>
+          <td class="actions">
+            <button class="action-btn view-btn" (click)="onViewDetail(employee)" title="View Detail">
+              👁️
+            </button>
+            <button class="action-btn edit-btn" (click)="onEditEmployee(employee)" title="Edit">
+              ✏️
+            </button>
+            <button class="action-btn delete-btn" (click)="onDeleteEmployee(employee)" title="Delete">
+              🗑️
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading employees...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && employees.length === 0" class="empty-state">
+      <p>No employees found</p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button 
+      class="page-btn" 
+      [disabled]="currentPage === 1"
+      (click)="onPageChange(currentPage - 1)"
+    >
+      Previous
+    </button>
+    
+    <button 
+      *ngFor="let page of pages" 
+      class="page-btn" 
+      [class.active]="page === currentPage"
+      (click)="onPageChange(page)"
+    >
+      {{ page }}
+    </button>
+    
+    <button 
+      class="page-btn" 
+      [disabled]="currentPage === totalPages"
+      (click)="onPageChange(currentPage + 1)"
+    >
+      Next
+    </button>
+  </div>
+</div>

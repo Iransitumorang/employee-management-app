@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
   styleUrl: './login.scss'
 })
 export class LoginComponent {
-  username: string = '';
-  password: string = '';
+  username: string = 'iransitumorang';
+  password: string = 'iransitumorang';
   errorMessage: string = '';
   isLoading: boolean = false;
 
@@ -24,7 +24,7 @@ export class LoginComponent {
     // Simulasi delay login
     setTimeout(() => {
       // Hardcoded credentials
-      if (this.username === 'admin' && this.password === 'admin123') {
+      if (this.username === 'iransitumorang' && this.password === 'iransitumorang') {
         // Simpan status login (bisa menggunakan localStorage atau service)
         localStorage.setItem('isLoggedIn', 'true');
         this.router.navigate(['/employee']);

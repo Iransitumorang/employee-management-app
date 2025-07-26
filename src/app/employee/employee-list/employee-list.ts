@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EmployeeService } from '../services/employee.service';
 import { Employee, EmployeeSearchParams, PaginationParams } from '../models/employee.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-employee-list',
@@ -19,13 +20,13 @@ export class EmployeeListComponent implements OnInit {
   pageSizeOptions = [5, 10, 20, 50];
   isLoading = false;
   
-  searchParams: EmployeeSearchParams = {};
+  searchParams: EmployeeSearchParams = {
+    status: 'All Status'
+  };
   sortBy = '';
   sortOrder: 'asc' | 'desc' = 'asc';
   
-  showNotification = false;
-  notificationMessage = '';
-  notificationType = '';
+
 
   constructor(
     private employeeService: EmployeeService,
@@ -89,24 +90,83 @@ export class EmployeeListComponent implements OnInit {
     this.router.navigate(['/employee/add']);
   }
 
+  onProfile(): void {
+    Swal.fire({
+      title: 'Profile Information',
+      html: `
+        <div style="text-align: left;">
+          <p><strong>Name:</strong> Admin User</p>
+          <p><strong>Role:</strong> Administrator</p>
+          <p><strong>Email:</strong> admin@company.com</p>
+          <p><strong>Last Login:</strong> ${new Date().toLocaleString()}</p>
+        </div>
+      `,
+      icon: 'info',
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#667eea'
+    });
+  }
+
+  onLogout(): void {
+    Swal.fire({
+      title: 'Logout',
+      text: 'Are you sure you want to logout?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, logout',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem('isLoggedIn');
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+
   onEditEmployee(employee: Employee): void {
-    this.showNotificationMessage(`Edit employee ${employee.firstName} ${employee.lastName}`, 'warning');
+    this.router.navigate(['/employee/edit', employee.id]);
   }
 
   onDeleteEmployee(employee: Employee): void {
-    if (confirm(`Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`)) {
-      this.employeeService.deleteEmployee(employee.id).subscribe({
-        next: (success) => {
-          if (success) {
-            this.showNotificationMessage(`Employee ${employee.firstName} ${employee.lastName} deleted successfully`, 'error');
-            this.loadEmployees();
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you want to delete ${employee.firstName} ${employee.lastName}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.employeeService.deleteEmployee(employee.id).subscribe({
+          next: (success) => {
+            if (success) {
+              Swal.fire({
+                title: 'Deleted!',
+                text: `Employee ${employee.firstName} ${employee.lastName} has been deleted.`,
+                icon: 'success',
+                confirmButtonColor: '#28a745',
+                timer: 3000,
+                timerProgressBar: true
+              });
+              this.loadEmployees();
+            }
+          },
+          error: (error) => {
+            console.error('Error deleting employee:', error);
+            Swal.fire({
+              title: 'Error!',
+              text: 'Failed to delete employee. Please try again.',
+              icon: 'error',
+              confirmButtonColor: '#dc3545'
+            });
           }
-        },
-        error: (error) => {
-          console.error('Error deleting employee:', error);
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   onViewDetail(employee: Employee): void {
@@ -114,13 +174,13 @@ export class EmployeeListComponent implements OnInit {
   }
 
   private showNotificationMessage(message: string, type: 'success' | 'warning' | 'error'): void {
-    this.notificationMessage = message;
-    this.notificationType = type;
-    this.showNotification = true;
-    
-    setTimeout(() => {
-      this.showNotification = false;
-    }, 3000);
+    Swal.fire({
+      title: type === 'success' ? 'Success!' : type === 'warning' ? 'Warning!' : 'Error!',
+      text: message,
+      icon: type,
+      timer: 3000,
+      timerProgressBar: true
+    });
   }
 
   get totalPages(): number {
@@ -137,6 +197,18 @@ export class EmployeeListComponent implements OnInit {
     }
     
     return pages;
+  }
+
+  onFirstPage(): void {
+    if (this.currentPage > 1) {
+      this.onPageChange(1);
+    }
+  }
+
+  onLastPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.onPageChange(this.totalPages);
+    }
   }
 
   formatCurrency(amount: number): string {

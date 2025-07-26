@@ -1,7 +1,8 @@
-<div class="add-employee-container">
+<div class="container-wrapper">
+  <div class="add-employee-container card">
   <div class="header">
-    <h1>Add New Employee</h1>
-    <p>Fill in the form below to add a new employee</p>
+    <h1>{{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}</h1>
+    <p>{{ isEditMode ? 'Update employee information below' : 'Fill in the form below to add a new employee' }}</p>
   </div>
 
   <form (ngSubmit)="onSave()" class="employee-form">
@@ -166,9 +167,10 @@
         class="save-btn"
         [disabled]="isLoading"
       >
-        <span *ngIf="!isLoading">Save Employee</span>
-        <span *ngIf="isLoading">Saving...</span>
+        <span *ngIf="!isLoading">{{ isEditMode ? 'Update Employee' : 'Save Employee' }}</span>
+        <span *ngIf="isLoading">{{ isEditMode ? 'Updating...' : 'Saving...' }}</span>
       </button>
     </div>
-  </form>
+    </form>
+  </div>
 </div>

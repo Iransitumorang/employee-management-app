@@ -12,8 +12,7 @@ export interface Employee {
 }
 
 export interface EmployeeSearchParams {
-  firstName?: string;
-  lastName?: string;
+  fullName?: string;
   email?: string;
   group?: string;
   status?: string;

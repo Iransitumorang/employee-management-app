@@ -120,8 +120,8 @@ interface Employee {
 
 ## Demo Credentials
 
-- **Username:** admin
-- **Password:** admin123
+- **Username:** iransitumorang
+- **Password:** iransitumorang
 
 ## Browser Support
 

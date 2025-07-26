@@ -1,29 +1,39 @@
-<div class="employee-list-container">
-  <div class="header">
-    <h1>Employee List</h1>
-    <button class="add-btn" (click)="onAddEmployee()">
-      <span>+</span> Add Employee
-    </button>
-  </div>
+<div class="container-wrapper">
+  <div class="employee-list-container card">
+    <div class="page-title">
+      <h1>Employee Management System</h1>
+    </div>
+        <div class="header">
+      <h2>Employee List</h2>
+      <div class="header-actions">
+        <div class="profile-section">
+          <div class="profile-info">
+            <span class="profile-name">Welcome, Iran Situmorang</span>
+            <span class="profile-role">Administrator</span>
+          </div>
+          <button class="profile-btn" (click)="onProfile()" title="View Profile">
+            👤
+          </button>
+          <button class="logout-btn" (click)="onLogout()" title="Logout">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="16,17 21,12 16,7" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="21" y1="12" x2="9" y2="12" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
 
   <!-- Search Section -->
   <div class="search-section">
     <div class="search-row">
       <div class="search-field">
-        <label>First Name</label>
+        <label>Full Name</label>
         <input 
           type="text" 
-          [(ngModel)]="searchParams.firstName" 
-          placeholder="Search by first name"
-          (keyup.enter)="onSearch()"
-        >
-      </div>
-      <div class="search-field">
-        <label>Last Name</label>
-        <input 
-          type="text" 
-          [(ngModel)]="searchParams.lastName" 
-          placeholder="Search by last name"
+          [(ngModel)]="searchParams.fullName" 
+          placeholder="Search by full name"
           (keyup.enter)="onSearch()"
         >
       </div>
@@ -48,7 +58,7 @@
       <div class="search-field">
         <label>Status</label>
         <select [(ngModel)]="searchParams.status" (change)="onSearch()">
-          <option value="">All Status</option>
+          <option value="All Status">All Status</option>
           <option value="Active">Active</option>
           <option value="Inactive">Inactive</option>
           <option value="Pending">Pending</option>
@@ -56,31 +66,20 @@
       </div>
       <div class="search-actions">
         <button class="search-btn" (click)="onSearch()">Search</button>
-        <button class="clear-btn" (click)="searchParams = {}; onSearch()">Clear</button>
+        <button class="clear-btn" (click)="searchParams = { status: 'All Status' }; onSearch()">Clear</button>
       </div>
     </div>
   </div>
 
-  <!-- Page Size Control -->
-  <div class="page-controls">
-    <div class="page-size-control">
-      <label>Items per page:</label>
-      <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
-        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
-      </select>
-    </div>
-    <div class="total-info">
-      Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, totalItems) }} of {{ totalItems }} entries
-    </div>
-  </div>
 
-  <!-- Notification -->
-  <div 
-    class="notification" 
-    *ngIf="showNotification"
-    [class]="'notification-' + notificationType"
-  >
-    {{ notificationMessage }}
+
+
+
+  <!-- Add Employee Button -->
+  <div class="add-employee-section" style="display: flex !important; justify-content: flex-end !important; margin: 30px 0 !important;">
+    <button class="add-btn" (click)="onAddEmployee()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; color: white !important; border: none !important; padding: 10px 20px !important; border-radius: 6px !important; font-size: 14px !important; font-weight: 600 !important; cursor: pointer !important; display: flex !important; align-items: center !important; gap: 8px !important; transition: all 0.2s ease !important; position: relative !important; overflow: hidden !important; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2) !important;">
+      <span style="font-size: 16px !important; font-weight: bold !important;">+</span> Add Employee
+    </button>
   </div>
 
   <!-- Table -->
@@ -93,48 +92,49 @@
             <span *ngIf="sortBy === 'id'" class="sort-icon">
               {{ sortOrder === 'asc' ? '↑' : '↓' }}
             </span>
+            <span *ngIf="sortBy !== 'id'" class="sort-icon-placeholder">↕</span>
           </th>
           <th (click)="onSort('firstName')" class="sortable">
-            First Name
+            Full Name
             <span *ngIf="sortBy === 'firstName'" class="sort-icon">
               {{ sortOrder === 'asc' ? '↑' : '↓' }}
             </span>
-          </th>
-          <th (click)="onSort('lastName')" class="sortable">
-            Last Name
-            <span *ngIf="sortBy === 'lastName'" class="sort-icon">
-              {{ sortOrder === 'asc' ? '↑' : '↓' }}
-            </span>
+            <span *ngIf="sortBy !== 'firstName'" class="sort-icon-placeholder">↕</span>
           </th>
           <th (click)="onSort('email')" class="sortable">
             Email
             <span *ngIf="sortBy === 'email'" class="sort-icon">
               {{ sortOrder === 'asc' ? '↑' : '↓' }}
             </span>
+            <span *ngIf="sortBy !== 'email'" class="sort-icon-placeholder">↕</span>
           </th>
           <th (click)="onSort('birthDate')" class="sortable">
             Birth Date
             <span *ngIf="sortBy === 'birthDate'" class="sort-icon">
               {{ sortOrder === 'asc' ? '↑' : '↓' }}
             </span>
+            <span *ngIf="sortBy !== 'birthDate'" class="sort-icon-placeholder">↕</span>
           </th>
           <th (click)="onSort('basicSalary')" class="sortable">
             Basic Salary
             <span *ngIf="sortBy === 'basicSalary'" class="sort-icon">
               {{ sortOrder === 'asc' ? '↑' : '↓' }}
             </span>
+            <span *ngIf="sortBy !== 'basicSalary'" class="sort-icon-placeholder">↕</span>
           </th>
           <th (click)="onSort('status')" class="sortable">
             Status
             <span *ngIf="sortBy === 'status'" class="sort-icon">
               {{ sortOrder === 'asc' ? '↑' : '↓' }}
             </span>
+            <span *ngIf="sortBy !== 'status'" class="sort-icon-placeholder">↕</span>
           </th>
           <th (click)="onSort('group')" class="sortable">
             Group
             <span *ngIf="sortBy === 'group'" class="sort-icon">
               {{ sortOrder === 'asc' ? '↑' : '↓' }}
             </span>
+            <span *ngIf="sortBy !== 'group'" class="sort-icon-placeholder">↕</span>
           </th>
           <th>Actions</th>
         </tr>
@@ -142,8 +142,7 @@
       <tbody>
         <tr *ngFor="let employee of employees" class="employee-row">
           <td>{{ employee.id }}</td>
-          <td>{{ employee.firstName }}</td>
-          <td>{{ employee.lastName }}</td>
+          <td>{{ employee.firstName }} {{ employee.lastName }}</td>
           <td>{{ employee.email }}</td>
           <td>{{ formatDate(employee.birthDate) }}</td>
           <td>{{ formatCurrency(employee.basicSalary) }}</td>
@@ -180,31 +179,63 @@
     </div>
   </div>
 
-  <!-- Pagination -->
-  <div class="pagination" *ngIf="totalPages > 1">
-    <button 
-      class="page-btn" 
-      [disabled]="currentPage === 1"
-      (click)="onPageChange(currentPage - 1)"
-    >
-      Previous
-    </button>
+  <!-- Pagination and Page Size Control -->
+  <div class="pagination-section" *ngIf="totalPages > 1">
+    <div class="page-size-control">
+      <label>Items per page:</label>
+      <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+      </select>
+    </div>
     
-    <button 
-      *ngFor="let page of pages" 
-      class="page-btn" 
-      [class.active]="page === currentPage"
-      (click)="onPageChange(page)"
-    >
-      {{ page }}
-    </button>
+    <div class="total-info">
+      Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, totalItems) }} of {{ totalItems }} entries
+    </div>
     
-    <button 
-      class="page-btn" 
-      [disabled]="currentPage === totalPages"
-      (click)="onPageChange(currentPage + 1)"
-    >
-      Next
-    </button>
+    <div class="pagination">
+      <button 
+        class="page-btn" 
+        [disabled]="currentPage === 1"
+        (click)="onFirstPage()"
+        title="First Page"
+      >
+        ««
+      </button>
+      
+      <button 
+        class="page-btn" 
+        [disabled]="currentPage === 1"
+        (click)="onPageChange(currentPage - 1)"
+      >
+        Previous
+      </button>
+      
+      <button 
+        *ngFor="let page of pages" 
+        class="page-btn" 
+        [class.active]="page === currentPage"
+        (click)="onPageChange(page)"
+      >
+        {{ page }}
+      </button>
+      
+      <button 
+        class="page-btn" 
+        [disabled]="currentPage === totalPages"
+        (click)="onPageChange(currentPage + 1)"
+      >
+        Next
+      </button>
+      
+      <button 
+        class="page-btn" 
+        [disabled]="currentPage === totalPages"
+        (click)="onLastPage()"
+        title="Last Page"
+      >
+        »»
+      </button>
+    </div>
+    </div>
   </div>
 </div>

@@ -56,14 +56,9 @@ export class EmployeeService {
     let filteredData = [...this.employees];
 
     // Apply search filters (AND logic)
-    if (searchParams.firstName) {
+    if (searchParams.fullName) {
       filteredData = filteredData.filter(emp => 
-        emp.firstName.toLowerCase().includes(searchParams.firstName!.toLowerCase())
-      );
-    }
-    if (searchParams.lastName) {
-      filteredData = filteredData.filter(emp => 
-        emp.lastName.toLowerCase().includes(searchParams.lastName!.toLowerCase())
+        `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(searchParams.fullName!.toLowerCase())
       );
     }
     if (searchParams.email) {
@@ -76,7 +71,7 @@ export class EmployeeService {
         emp.group.toLowerCase().includes(searchParams.group!.toLowerCase())
       );
     }
-    if (searchParams.status) {
+    if (searchParams.status && searchParams.status !== 'All Status') {
       filteredData = filteredData.filter(emp => 
         emp.status.toLowerCase() === searchParams.status!.toLowerCase()
       );

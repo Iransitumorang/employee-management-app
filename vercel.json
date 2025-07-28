@@ -11,8 +11,17 @@
   ],
   "routes": [
     {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "src/app/**/*.ts": {
+      "runtime": "nodejs18.x"
+    }
+  }
 } 
